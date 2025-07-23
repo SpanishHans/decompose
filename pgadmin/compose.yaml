@@ -1,0 +1,23 @@
+services:
+    pgadmin:
+        image: dpage/pgadmin${VERSION}
+        env_file: ./.env
+        container_name: pgadmin
+        networks:
+            - network_pgadmin
+        ports:
+            - "${PORT_PGAD}:80"
+        environment:
+            PGADMIN_DEFAULT_EMAIL: ${MAIL_DB}
+            PGADMIN_DEFAULT_PASSWORD: ${PASS_DB}
+        volumes:
+            - pgadmin:/var/lib/pgadmin
+
+networks:
+    network_pgadmin:
+        driver: bridge
+        name: pgadmin_network
+
+volumes:
+    pgadmin:
+        name: pgadmin_vol_pgadmin
