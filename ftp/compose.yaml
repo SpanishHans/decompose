@@ -4,29 +4,28 @@ services:
     container_name: boveda_sftp
     restart: unless-stopped
     networks:
-      - boveda_web
+      - public_net
     ports:
-      - 4287:22
+      - 1234:22
     volumes:
-      - ./comp1/conf/users/users.conf:/etc/sftp/users.conf
-      - ./comp1/conf/certs/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key
-      - ./comp1/conf/certs/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key
-      - ./comp1/vol/sftp_data/vdeap/upload:/home/vdeap/upload
-      - ./comp1/vol/sftp_data/shared:/home/shared
+      - ./users/users.conf:/etc/sftp/users.conf:ro
+      - ./certs/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
+      - ./certs/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key:ro
+      - /srv/boveda_data/:/srv/boveda_data
 
   boveda_webserver:
     image: nginx:latest
     container_name: boveda_webserver
     restart: unless-stopped
     networks:
-      - boveda_web
-    ports:
-      - 4286:80
+      - public_net
+    expose:
+      - 123
     volumes:
-      - ./comp1/conf/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./comp1/vol/sftp_data/vdeap/upload:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/ssl:ro
+      - /srv/boveda_data/:/srv/boveda_data
 
 networks:
-  boveda_web:
-    driver: bridge
-    name: net_boveda
+  public_net:
+    name: net_public
