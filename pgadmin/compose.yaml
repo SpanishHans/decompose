@@ -1,6 +1,6 @@
 services:
     pgadmin:
-        image: dpage/pgadmin${VERSION}
+        image: dpage/pgadmin4:${VERSION}
         env_file: ./.env
         container_name: pgadmin
         networks:
